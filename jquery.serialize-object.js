@@ -1,5 +1,14 @@
 (function($) {
-  return $.fn.serializeObject = function() {
+  var mainConfig = {
+    "numberForNumber":true,
+    "defaultValue":null
+  }
+  $.serializeObjectSetup = function(config) {
+    return $.extend(true, mainConfig, config);
+  };
+  return $.fn.serializeObject = function(config) {
+    config = config ? $.extend(true, {}, mainConfig, config) : mainConfig;
+
     var json, patterns, push_counters,
       _this = this;
     json = {};
@@ -27,7 +36,8 @@
         return;
       }
       keys = elem.name.match(patterns.key);
-      merge = elem.value;
+      var value = elem.value;
+      merge = (config.numberForNumber ? (isNaN(value) ? elem.value : Number(value)) : value) || config.defaultValue;
       reverse_key = elem.name;
       while ((k = keys.pop()) !== void 0) {
         if (patterns.push.test(k)) {
