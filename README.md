@@ -4,29 +4,55 @@
 
 ```js
 $.serializeObjectSetup({
+  "defaultValue":null,    // The default value if the value is not set.
+  "defaultValues":{},     // Specifying the default values for elements with the given names.
   "numberForNumber":true, // decide to convert the value into number
                           // if it is a number (if !isNaN(value) -> Number(value)).
-
-  "defaultValue":null     // The default value if the value is not set.
+  "noNumbers":[]          // the elements with the names here should not be converted into numbers
+                          // even if "numberForNumber is true.
 });
 ```
 The default values are
 ```js
 {
+  "defaultValue":null,
+  "defaultValues":{},
   "numberForNumber":true,
-  "defaultValue":null
+  "noNumbers":[]
 }
 ```
 e.g.)
 Don't convert to number and use an empty String ("") for the default value.
 ```js
 $.serializeObjectSetup({
-  "numberForNumber":false,
-  "defaultValue":""
+  "defaultValue":"",
+  "numberForNumber":false
 });
 ```
+<br />
+* Use an empty String ("") for the default value, yet use null for "phoneNumber".
+* Convert to numbers except "phoneNumber"
 
+```js
+$.serializeObjectSetup({
+  "defaultValue":"",
+  "defaultValues":{"phoneNumber",null},
+  "numberForNumber":false,
+  "noNumbers":["phoneNumber"]
+});
+```
+<br />
+* Use an empty String ("") for the default value, yet use null for "phoneNumber" and "mobileNumber".
+* Convert to numbers except "phoneNumber" and "mobileNumber"
 
+```js
+$.serializeObjectSetup({
+  "defaultValue":"",
+  "defaultValues":[{"name":["phoneNumber", "mobileNumber"],"defaultValue":null}],
+  "numberForNumber":false,
+  "noNumbers":["phoneNumber", "mobileNumber"]
+});
+```
 
 
 ## Usage
