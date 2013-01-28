@@ -1,11 +1,34 @@
 (function($) {
   var mainConfig = {
+    "defaultValue":null,
+    "defaultValues":{},
     "numberForNumber":true,
-    "defaultValue":null
+    "noNumbers":[]
   }
   $.serializeObjectSetup = function(config) {
     return $.extend(true, mainConfig, config);
   };
+
+  function getDefaultValue(key, defaultIfNotFound, defaultValues) {
+    if ($.isArray(defaultValues))
+    {
+      for (var i = 0; i < defaultValues.length; i++)
+      {
+        var defaultNameValuePair = defaultValues[i];
+        if (-1 != $.inArray(key, defaultNameValuePair.names))
+        {
+          return defaultNameValuePair.defaultValue;
+        }
+      }
+    }
+    else
+    {
+      var defaultValueFound = defaultValues[key];
+      return defaultValueFound ? defaultValueFound : defaultIfNotFound;
+    }
+    return defaultIfNotFound;
+  };
+
   return $.fn.serializeObject = function(config) {
     config = config ? $.extend(true, {}, mainConfig, config) : mainConfig;
 
@@ -30,15 +53,27 @@
       }
       return push_counters[key]++;
     };
+
     $.each($(this).serializeArray(), function(i, elem) {
       var k, keys, merge, re, reverse_key;
       if (!patterns.validate.test(elem.name)) {
         return;
       }
       keys = elem.name.match(patterns.key);
-      var value = elem.value;
-      merge = (config.numberForNumber ? (isNaN(value) ? elem.value : Number(value)) : value) || config.defaultValue;
+      
       reverse_key = elem.name;
+      var value = elem.value;
+      var defaultValue = getDefaultValue(reverse_key, config.defaultValue, config.defaultValues);
+
+      merge =
+        (config.numberForNumber &&
+         0 > $.inArray(reverse_key, config.noNumbers) ?
+            (isNaN(value) ?
+              elem.value :
+              Number(value)) :
+            value) ||
+        defaultValue;
+      
       while ((k = keys.pop()) !== void 0) {
         if (patterns.push.test(k)) {
           re = new RegExp("\\[" + k + "\\]$");
