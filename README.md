@@ -1,3 +1,8 @@
+Tweaked jquery-serialize-object
+==========
+This is a tweaked version of [jquery-serialize-object](https://github.com/macek/jquery-serialize-object "jquery-serialize-object") originally written by [Paul Maček](https://github.com/macek "Paul Maček").
+The main purpose for that is to make it work well with [JSON Statham](http://projects.elixirian.org/json-statham "JSON Statham"), Java / JSON Mapper library written by [myself](http://lckymn.com "Kevin's Homepage").
+
 # Converts an HTML form into a JavaScript object
 
 ## Configuration
