@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="jquery-serialize-object Test">
+<meta name="author" content="Kevin Lee">
+<title>jquery-serialize-object - Test Page</title>
+
+<link type="text/css" href="qunit-1.11.0.css" rel="stylesheet" />
+</head>
+<body>
+<div>
+  <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
+</div>
+<div>
+  <form id="myForm">
+  <div><input type="hidden" name="id" value="999" /></div>
+  <div>Name: <input type="text" name="name" value="Kevin" /></div>
+  <div>Email: <input type="text" name="email" /></div>
+  <div>Address:</div>
+  <div>Street: <input type="text" name="address[street]" value="123 / ABC Street" /></div>
+  <div>Suburb: <input type="text" name="address[suburb]" value="Sydney" /></div>
+  <div>State: <input type="text" name="address[state]" value="NSW" /></div>
+  <div>Postcode: <input type="text" name="address[postcode]" value="2000" /></div>
+</form>
+</div>
+<script type="text/javascript" src="jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="qunit-1.11.0.js"></script>
+<script type="text/javascript" src="sprintf.min.js"></script>
+<script type="text/javascript" src="../jquery.serialize-object.js"></script>
+<script type="text/javascript">
+(function($){
+
+  function log(actual, expected) {
+    console.log("expected:\n", expected);
+    console.log("actual:\n", actual);
+    console.log("");
+  }
+
+  function toMessage(actual, expected) {
+    return sprintf("actual: \n%1$s\n must be the same as expected: \n%2$s.",
+                   JSON.stringify(actual),
+                   JSON.stringify(expected));
+  }
+
+  test("test with default values", function(){
+    var expected = {
+      "id":999,
+      "name":"Kevin",
+      "email":null,
+      "address":{
+        "street":"123 / ABC Street",
+        "suburb":"Sydney",
+        "state":"NSW",
+        "postcode":2000
+      }
+    };
+    var actual = $('#myForm').serializeObject();
+    log(actual, expected);
+    deepEqual(actual, expected, toMessage(actual, expected));
+  });
+
+  test("test with String for number", function(){
+    var expected = {
+      "id":"999",
+      "name":"Kevin",
+      "email":null,
+      "address":{
+        "street":"123 / ABC Street",
+        "suburb":"Sydney",
+        "state":"NSW",
+        "postcode":"2000"
+      }
+    };
+    var actual = $('#myForm').serializeObject({"numberForNumber":false});
+    log(actual, expected);
+    deepEqual(actual, expected, toMessage(actual, expected));
+  });
+
+  test("test with String for number and default value", function(){
+    var expected = {
+      "id":"999",
+      "name":"Kevin",
+      "email":"",
+      "address":{
+        "street":"123 / ABC Street",
+        "suburb":"Sydney",
+        "state":"NSW",
+        "postcode":"2000"
+      }
+    };
+    var actual = $('#myForm').serializeObject({"defaultValue":"","numberForNumber":false});
+    log(actual, expected);
+    deepEqual(actual, expected, toMessage(actual, expected));
+  });
+
+  test("test with number for number / default value / no number for postcode ", function(){
+    var expected = {
+      "id":999,
+      "name":"Kevin",
+      "email":"",
+      "address":{
+        "street":"123 / ABC Street",
+        "suburb":"Sydney",
+        "state":"NSW",
+        "postcode":"2000"
+      }
+    };
+    var actual = $('#myForm').serializeObject({"defaultValue":"","numberForNumber":true,"noNumbers":["address[postcode]"]});
+    log(actual, expected);
+    deepEqual(actual, expected, toMessage(actual, expected));
+  });
+
+})(jQuery);
+</script>
+</body>
+</html>
