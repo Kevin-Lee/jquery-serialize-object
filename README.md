@@ -41,7 +41,7 @@ $.serializeObjectSetup({
 ```js
 $.serializeObjectSetup({
   "defaultValue":"",
-  "defaultValues":{"phoneNumber",null},
+  "defaultValues":{"phoneNumber":null},
   "numberForNumber":false,
   "noNumbers":["phoneNumber"]
 });
