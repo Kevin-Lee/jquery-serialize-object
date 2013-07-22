@@ -15,7 +15,7 @@
       for (var i = 0; i < defaultValues.length; i++)
       {
         var defaultNameValuePair = defaultValues[i];
-        if (-1 != $.inArray(key, defaultNameValuePair.names))
+        if (-1 !== $.inArray(key, defaultNameValuePair.names))
         {
           return defaultNameValuePair.defaultValue;
         }
